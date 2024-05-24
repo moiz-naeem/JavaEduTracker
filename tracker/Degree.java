@@ -1,27 +1,32 @@
-package dev.m3s.programming2.homework2;
+package dev.m3s.programming2.homework3;
+import java.util.ArrayList;
+import java.util.List;
 public class Degree {
-
+//getCreditsbyBase & typr might need fixation
    private static final int MAX_COURSES = 50;
-   private int count;
+   // private int count;
    private String degreeTitle = ConstantValues.NO_TITLE;
    private String titleOfThesis = ConstantValues.NO_TITLE;
-   private StudentCourse[] myCourses = new StudentCourse[MAX_COURSES];
+   private ArrayList<StudentCourse> myCourses = new ArrayList<StudentCourse>();
    
-   public StudentCourse[] getCourses(){
+   
+   public List<StudentCourse> getCourses(){
       return myCourses;
    }
    
-   public void addStudentCourses(StudentCourse[] courses){
-      for(StudentCourse course : courses){
-         addStudentCourse(course);
-     }
+   public void addStudentCourses(List<StudentCourse> courses){
+      if(courses != null && courses.size() + myCourses.size() <= MAX_COURSES){
+         for(StudentCourse course : courses){
+            addStudentCourse(course);
+        }
+      }
+      
    }
    
    public boolean addStudentCourse(StudentCourse course){
-      if(course != null && count < MAX_COURSES){
-          myCourses[count] = course;
-          count++;
-          return true;
+      if(course != null && myCourses.size() < MAX_COURSES){
+         myCourses.add(course);
+         return true;
      }
          return false;
       }
@@ -49,65 +54,121 @@ public class Degree {
    
    public double getCreditsByBase(char base){
       double total = 0;
-      for (StudentCourse course : myCourses){
-         if (isCourseCompleted(course) && course.course.getCourseBase() == base){
-            total += course.getCourse().getCredits();
+      if (base != ' '){
+         if (base == 'a'){
+            base = 'A';
          }
+         else if (base == 'p'){
+            base = 'P';
+         }
+         else if (base == 's'){
+            base = 'S';
+         }
+         for (StudentCourse course : myCourses){
+            Course courseC = course.getCourse();
+            if (isCourseCompleted(course) && courseC.getCourseBase() == base){
+               total += courseC.getCredits();
+            }
+         }
+         return total;
       }
-      return total++;
+      return total;
    }
    
    public double getCreditsByType(final int courseType){
-      double ret = 0;
-      for (StudentCourse course : myCourses){
-         if (isCourseCompleted(course) && course.course.getCourseType() == courseType){
-            ret+= course.getCourse().getCredits();
-         }
+      double total = 0;
+      for (int i = 0; i < myCourses.size(); i++){
+         if ((myCourses.get(i).getCourse().getCourseType() == courseType) && (myCourses.get(i).getGradeNum() > 0) && myCourses.get(i).getGradeNum() != 70){
+            total += myCourses.get(i).getCourse().getCredits();
+         }   
       }
-      return ret;
+      return total;
    }
    
    public double getCredits(){
       double total = 0;
-        for(StudentCourse course : myCourses ){
-            if(course == null){
-               return total;
-            }
-            if(isCourseCompleted(course)){
-               total += course.getCourse().getCredits();
-            }
-        }
-        return total;
+      for (int i = 0; i <  myCourses.size(); i++){
+         if ( myCourses.get(i) == null){
+            return total;
+         }
+         if (isCourseCompleted(myCourses.get(i))){
+            total+=  myCourses.get(i).getCourse().getCredits();
+         }
+      }
+      return total;
    }
    
    private boolean isCourseCompleted(StudentCourse c){
-      if ( c != null && c.isPassed()){
+      if (c.isPassed() && c != null){
          return true;
       }
       return false;
    }
    
    public void printCourses(){
-      for(StudentCourse course : myCourses){
-          if(course == null){
-            break;
-          }
-          else{
-            System.out.println(course+ " ");
-          }
+      for (int i = 0; i <  myCourses.size(); i++){
+         if ( myCourses.get(i) != null){
+            myCourses.get(i).toString();
+         }
       }
-  }
+   }
    
+   public List<Double> getGPA(int type){
+      ArrayList<Double> total = new ArrayList<Double>();
+      double count = 0;
+      double nCount = 0;
+      double sum = 0;
+      for (int i = 0; i < myCourses.size(); i++){
+         if (type == 0){
+            if (myCourses.get(i).getCourse().getCourseTypeString() == "Optional"){
+               count++;
+               if (myCourses.get(i).getCourse().isNumericGrade()){
+                  sum += myCourses.get(i).getGradeNum();
+                  nCount++;
+               }
+            }
+         }
+         else if (type == 1){
+            if (myCourses.get(i).getCourse().getCourseTypeString() == "Mandatory"){
+               count++;
+               if (myCourses.get(i).getCourse().isNumericGrade()){
+                  sum += myCourses.get(i).getGradeNum();
+                  nCount++;
+               }
+            }
+         }
+         else if (type == 2){
+            count++;
+            if (myCourses.get(i).getCourse().isNumericGrade()){
+               sum += myCourses.get(i).getGradeNum();
+               nCount++;
+            }
+         }
+         else{
+            total.add(0.0);
+            total.add(0.0);
+            total.add(0.0);
+            return total;
+         }
+      }
+      total.add(sum);
+      total.add(count);
+      double cgpa = Math.round((sum/nCount)*100) / 100;
+      total.add(cgpa);
+      return total;
+   }
    public String toString(){
      StringBuilder sb = new StringBuilder();
-     sb.append("Degree [Title: \"").append(degreeTitle).append("\" (courses: ").append(count).append(")\n");
+     sb.append("Degree [Title: \"").append(degreeTitle).append("\" (courses: ").append(myCourses.size()).append(")\n");
      sb.append("Thesis title: \"").append(titleOfThesis).append("\"\n");
-     for (int i = 0; i < count; i++) {
-         sb.append(i + 1).append(". ").append(myCourses[i]).append(" Year: ").append(myCourses[i].getYear()).append(", Grade: ").append(myCourses[i].getGradeNum()).append("]\n");
+     for (int i = 0; i < myCourses.size(); i++) {
+         sb.append(i + 1).append(". ").append(myCourses.get(i).toString());
      }
-     sb.append("]");
+
      return sb.toString();
 
     }
+   
+   
    
 }
