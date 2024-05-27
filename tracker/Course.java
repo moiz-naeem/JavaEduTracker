@@ -1,9 +1,9 @@
-package dev.m3s.programming2.homework2;
+package dev.m3s.programming2.homework3;
 public class Course {
 
-   private String name;
+   private String name = ConstantValues.NO_TITLE;
    private String courseCode;
-   private char courseBase;
+   private char courseBase = ' ';
    private int courseType;
    private int period;
    private double credits;
@@ -74,7 +74,7 @@ public class Course {
       else if (courseBase == 's'){
          courseBase = 'S';
       }
-      if (courseCode > 0 && courseCode < 1000000 && (courseBase == 'A' || courseBase == 'P' || courseBase == 'S')){
+      if (String.valueOf(courseCode).length() == 6 && (courseBase == 'A' || courseBase == 'P' || courseBase == 'S')){
          this.courseBase = courseBase;
          this.courseCode = String.valueOf(courseCode) + courseBase;
          }
@@ -114,8 +114,10 @@ public class Course {
    }
    
    public String toString(){
-        String finalStr = "[" + getCourseCode() + " (" + getCredits() + ") " + getName() + ". " + getCourseTypeString() + ", " + "period: " + getPeriod() + ".]";  
-        return finalStr;
+        String str = "[" + getCourseCode() + " (" + getCredits() + " cr) " + getName() + ". " + getCourseTypeString() + ", " + "period: " + getPeriod() + ".] \n";  
+        return str;
     }
+   
+   
    
 }
