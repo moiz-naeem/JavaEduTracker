@@ -1,4 +1,3 @@
-package dev.m3s.programming2.homework3;
 import java.time.Year;
 
 //the last part of setGrade regarding setting year needs to be checked 
