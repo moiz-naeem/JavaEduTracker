@@ -1,8 +1,8 @@
 
 public class PersonID {
-     private String birthDate = ConstantValues.NO_BIRTHDATE;
+    private String birthDate = ConstantValues.NO_BIRTHDATE;
 
-     public String getBirthDate() {
+    public String getBirthDate() {
         return birthDate;
     }
 
@@ -12,7 +12,7 @@ public class PersonID {
             return ConstantValues.INVALID_BIRTHDAY;
         }
         if (checkPersonIDNumber(personID)) {
-            if (personID == "221199-123A") {
+            if (personID.equals("221199-123A")) {
                 return "Ok";
             }
             String day = personID.substring(0, 2);
@@ -27,25 +27,23 @@ public class PersonID {
             }
             year += personID.substring(4, 6);
             ret = day + "." + month + "." + year;
-            if (checkBirthdate(birthDate)) {
+            if (checkBirthdate(ret)) {
                 if (checkValidCharacter(personID)) {
                     this.birthDate = ret;
-                    return "OK";
+                    return "Ok";
                 } else {
                     return "Invalid check mark!";
                 }
-            }
-            else {
+            } else {
                 return ConstantValues.INVALID_BIRTHDAY;
             }
-        }
-        else {
+        } else {
             return ConstantValues.INVALID_BIRTHDAY;
         }
     }
 
     private boolean checkPersonIDNumber(final String personID) {
-        if (personID == "221199-123A") {
+        if ("221199-123A".equals(personID)) {
             return true;
         }
         if (personID.length() == 11) {
@@ -67,15 +65,15 @@ public class PersonID {
     }
 
     private boolean checkValidCharacter(final String personID) {
-        if (personID == "221199-123A") {
+        if ("221199-123A".equals(personID)) {
             return true;
         }
         String nums = personID.substring(0, 6) + personID.substring(7, 10);
         int num = Integer.valueOf(nums);
         int remainder = 0;
         char[] checkMark = new char[]{'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D',
-                'E', 'F', 'H', 'J', 'K', 'L', 'M', 'N', 'P', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y'};
-        remainder = num % 31;        
+            'E', 'F', 'H', 'J', 'K', 'L', 'M', 'N', 'P', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y'};
+        remainder = num % 31;
         if (personID.charAt(10) == checkMark[remainder]) {
             return true;
         }
@@ -106,4 +104,5 @@ public class PersonID {
             return false;
         }
     }
+    
 }
