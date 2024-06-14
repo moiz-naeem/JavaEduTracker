@@ -1,4 +1,3 @@
-
 public class ConstantValues {
     public static final String NO_NAME = "No name";
     public static final String NO_TITLE = "No title";
