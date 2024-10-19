@@ -1,4 +1,5 @@
 
+
 public class HourBasedPayment  implements Payment{
     private double eurosPerHour;
     private double hours;
